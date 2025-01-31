@@ -1,4 +1,5 @@
 #include <elf.h>
+#include <linux/limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -120,6 +121,32 @@ void usage(char *command) {
 }
 
 int main(int argc, char *argv[]) {
+  char *input_file = NULL;
+  char *output_path = NULL;
+
+  for (int i; i < argv; i++) {
+    if (strcmp(argv[i], "-h") == 0) {
+      usage(argv[0]);
+    } else if (strcmp(argv[i], "-o") == 0) {
+      if (i + 1 < argc) {
+        output_path = argv[i + 1];
+        i++;
+      } else {
+        printf("Error: -o requires an output path\n");
+        usage(argv[0]);
+      }
+    } else if (input_file == NULL) {
+      input_file = argv[1];
+    } else {
+      printf("Error: Unexpected argument '%s'\n", argv[1]);
+      usage(argv[0]);
+    }
+  }
+  if (input_file == NULL) {
+    printf("Error: No input file specified\n");
+    usage(argv[0]);
+  }
+
   if (argc < 2) {
     usage(argv[0]);
   }
@@ -127,15 +154,21 @@ int main(int argc, char *argv[]) {
   if (strcmp(name, "-h") == 0) {
     usage(argv[0]);
   }
+  char *path = argv[3];
   if (argc > 2) {
     printf("Error, too many arguments provided\n");
   }
 
-  read_elf(argv[1]);
+  if (read_elf(input_file) == 0) {
+    return -1;
+  }
 
-  char output_file[256];
-  snprintf(output_file, sizeof(output_file), "%s_modified", argv[1]);
-
+  char output_file[PATH_MAX];
+  if (output_path != NULL) {
+    snprintf(output_file, sizeof(output_file), "%s", output_path);
+  } else {
+    snprintf(output_file, sizeof(output_file), "%s_modified", input_file);
+  }
   uint16_t shnum = 0xffff;
 
   uint16_t shoff = 0xffff;
