@@ -106,14 +106,22 @@ int write_elf(char *input_file, char *output_file, uint16_t new_shnum,
   free(file_data);
   return 0;
 }
+
+void usage(char *command) {
+  printf("----------------------------------------\n");
+  printf("Usage: %s <EXECUTABLE>\n", command);
+  printf("----------------------------------------\n");
+
+  exit(1);
+}
+
 int main(int argc, char *argv[]) {
+  if (argc < 2) {
+    usage(argv[0]);
+  }
   char *name = argv[1];
   if (strcmp(name, "-h") == 0) {
-    printf("----------------------------------------\n");
-    printf("Usage: gdpoise <name or path for binary>\n");
-    printf("----------------------------------------\n");
-
-    return 0;
+    usage(argv[0]);
   }
   if (argc > 2) {
     printf("Error, too many arguments provided\n");
