@@ -13,6 +13,46 @@ Ever wanted to modify an ELF binary’s header to prevent GDB from debugging it,
 
 This effectively prevents GDB from debugging the binary by making it "unrecognizable" to the debugger, while maintaining the functionality of the binary itself. 
 
+
+### Usage
+
+```bash
+# Run the programm by passing the binary to modify
+gpoise <binaryname>
+
+#Make the modified binary executable
+chmod +x <binaryname>_modified
+
+#For help use:
+gdpoise -h
+```
+
+
+## Installation
+
+```bash
+# Download the release or clone the repository
+git clone https://github.com/0xjrx/gdpoise.git
+
+# Navigate to the project directory
+cd gdpoise
+
+# Compile the program
+
+make
+
+# Install the program
+make install
+
+# Or just use the install script
+chmod +x install.sh
+
+./install.sh
+
+# Its now ready to use
+```
+
+
 ### A word of caution
 
 While this tool is effective against GDB, it's worth noting that other debuggers sometimes use automated scripts to restore the corrupted binary, so this technique might not work in every case.
