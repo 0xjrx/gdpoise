@@ -50,6 +50,12 @@ chmod +x install.sh
 ./install.sh
 
 # Its now ready to use
+
+# For uninstall use:
+make uninstall 
+
+#or
+./uninstall.sh
 ```
 
 
