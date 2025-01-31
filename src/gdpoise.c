@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 int read_elf(char *filename) {
   FILE *fptr = fopen(filename, "rb");
@@ -103,6 +104,9 @@ int write_elf(char *input_file, char *output_file, uint16_t new_shnum,
   }
 
   fclose(outfile);
+  printf("Setting execution permissions...\n");
+  chmod(output_file,
+        S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
   free(file_data);
   return 0;
 }
