@@ -116,6 +116,9 @@ void usage(char *command) {
   printf("----------------------------------------\n");
   printf("Usage: %s <EXECUTABLE>\n", command);
   printf("----------------------------------------\n");
+  printf("Options:\n");
+  printf("-h: display help menu ");
+  printf("-o: set a custom path for the executable");
 
   exit(1);
 }
@@ -124,7 +127,7 @@ int main(int argc, char *argv[]) {
   char *input_file = NULL;
   char *output_path = NULL;
 
-  for (int i; i < argv; i++) {
+  for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "-h") == 0) {
       usage(argv[0]);
     } else if (strcmp(argv[i], "-o") == 0) {
@@ -136,44 +139,37 @@ int main(int argc, char *argv[]) {
         usage(argv[0]);
       }
     } else if (input_file == NULL) {
-      input_file = argv[1];
+      input_file = argv[i];
     } else {
-      printf("Error: Unexpected argument '%s'\n", argv[1]);
+      printf("Error: Too many input files specified\n");
       usage(argv[0]);
     }
   }
+
   if (input_file == NULL) {
     printf("Error: No input file specified\n");
     usage(argv[0]);
   }
 
-  if (argc < 2) {
-    usage(argv[0]);
-  }
-  char *name = argv[1];
-  if (strcmp(name, "-h") == 0) {
-    usage(argv[0]);
-  }
-  char *path = argv[3];
-  if (argc > 2) {
-    printf("Error, too many arguments provided\n");
-  }
+  // Get the base name of the input file
+  char *base_name = strrchr(input_file, '/');
+  base_name = base_name ? base_name + 1 : input_file;
 
-  if (read_elf(input_file) == 0) {
-    return -1;
-  }
-
+  // Prepare output filename
   char output_file[PATH_MAX];
   if (output_path != NULL) {
-    snprintf(output_file, sizeof(output_file), "%s", output_path);
+    snprintf(output_file, sizeof(output_file), "%s/%s_modified", output_path,
+             base_name);
   } else {
     snprintf(output_file, sizeof(output_file), "%s_modified", input_file);
   }
+
+  if (read_elf(input_file) != 0) {
+    return 1;
+  }
+
   uint16_t shnum = 0xffff;
-
   uint16_t shoff = 0xffff;
-
   uint16_t shstrndx = 0xffff;
-
-  write_elf(argv[1], output_file, shnum, shoff, shstrndx);
+  return write_elf(input_file, output_file, shnum, shoff, shstrndx);
 }
