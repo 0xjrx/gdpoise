@@ -5,7 +5,7 @@ INSTALL_DIR="$HOME/.local/bin"
 mkdir -p "$INSTALL_DIR"
 
 echo "Compiling the program..."
-gcc -g -o gdpoise gdpoise.c
+gcc -g -o gdpoise src/gdpoise.c
 
 if [[ $? -ne 0 ]]; then
   echo "Compilation failed!"

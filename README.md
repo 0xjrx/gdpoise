@@ -20,8 +20,7 @@ This effectively prevents GDB from debugging the binary by making it "unrecogniz
 # Run the programm by passing the binary to modify
 gpoise <binaryname>
 
-#Make the modified binary executable
-chmod +x <binaryname>_modified
+# This will create the binary <filename>_modified
 
 #For help use:
 gdpoise -h
