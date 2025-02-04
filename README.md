@@ -18,9 +18,13 @@ This effectively prevents GDB from debugging the binary by making it "unrecogniz
 
 ```bash
 # Run the programm by passing the binary to modify
+# This will create the binary <filename>_modified in the current directory
 gpoise <binaryname>
 
-# This will create the binary <filename>_modified
+# This will create the binary in a specified outout folder
+gdpoise <binaryname> -o <path>
+
+
 
 #For help use:
 gdpoise -h
